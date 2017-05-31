@@ -1,0 +1,16 @@
+name = "FixBuildModeTemplatesBug"
+uid = "b50c658a-0601-49b3-9acd-61d845c7f383"
+version = 1
+copyright = "no"
+description = "Patches an issue where build mode is exited if you build templates"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = {}
+before = {}
+after = {}

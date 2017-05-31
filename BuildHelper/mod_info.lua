@@ -1,0 +1,16 @@
+name = "BuildHelper"
+uid = "b6a103cb-0cda-4e2d-be3e-7b25c1be9611"
+version = 1
+copyright = "no"
+description = "Some build helper methods"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = false
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = {}
+before = {}
+after = {}

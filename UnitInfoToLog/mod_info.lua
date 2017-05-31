@@ -1,0 +1,16 @@
+name = "UnitInfoToLog"
+uid = "1ebcbce4-fc05-48d0-8234-37215083a5fb"
+version = 1
+copyright = "no"
+description = "When single unit is selected, print some info about the unit to the log"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = {}
+before = {}
+after = {}

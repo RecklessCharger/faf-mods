@@ -1,0 +1,16 @@
+name = "SimplerIdleEngineersAndFactories"
+uid = "a8b52910-bb35-430e-8f58-35b1047976bf"
+version = 1
+copyright = "no"
+description = "Add text labels to help identify idle engineers and factories"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = { }
+before = {}
+after = {}

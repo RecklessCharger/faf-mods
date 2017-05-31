@@ -1,0 +1,16 @@
+name = "SelectionHelper"
+uid = "e8c05efa-130e-4d8b-842a-c8f2e1a7a0ca"
+version = 1
+copyright = "no"
+description = "Some selection helper methods"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = false
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = { }
+before = {}
+after = {}
