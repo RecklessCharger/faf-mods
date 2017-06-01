@@ -1,0 +1,16 @@
+name = "RenderCircleAtCursor"
+uid = "a126840a-5173-49ba-b4d2-17b4036f91d3"
+version = 1
+copyright = "no"
+description = "Just trying out circle rendering, based on how additional camera stuff mod does this."
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = {}
+before = {}
+after = {}
