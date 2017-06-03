@@ -72,6 +72,9 @@ function IsNearlyIdle(unit)
     if not t or table.getn(t) ~= 1 then return false end
     -- (unit has exactly one command queued)
     local command = t[1]
+    if command.type == "Guard" then
+        return true
+    end
     if command.type ~= "Move" and command.type ~= "AggressiveMove" and command.type ~= "FormMove" then
         return false
     end
