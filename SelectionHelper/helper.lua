@@ -64,7 +64,7 @@ INFO:   }
 INFO: }
 ]]--
 
-local maxDist = 25
+local maxDist = 35
 local maxDistSquared = maxDist * maxDist
 
 function IsNearlyIdle(unit)
