@@ -1,0 +1,16 @@
+name = "TimeOut"
+uid = "d3392070-1cbb-48e8-a252-65829f318d3a"
+version = 1
+copyright = "no"
+description = "Time out the current order"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = {}
+before = {}
+after = {}
