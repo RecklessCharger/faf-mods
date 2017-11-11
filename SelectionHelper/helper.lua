@@ -90,7 +90,9 @@ function SelectIdleOrNearlyIdleByCategory(spec)
     local toSelect = {}
     for _, unit in candidates do
         if unit:IsIdle() or IsNearlyIdle(unit) then
-            table.insert(toSelect, unit)
+            if not import('/mods/SelectionHelper/flag_as_busy.lua').UnitIsFlaggedAsBusy(unit) then
+                table.insert(toSelect, unit)
+            end
         end 
     end
     SelectUnits(toSelect)
@@ -100,7 +102,9 @@ function FilterDownToIdleOrNearlyIdle(candidates)
     local filtered = {}
     for _, unit in candidates do
         if unit:IsIdle() or IsNearlyIdle(unit) then
-            table.insert(filtered, unit)
+            if not import('/mods/SelectionHelper/flag_as_busy.lua').UnitIsFlaggedAsBusy(unit) then
+                table.insert(filtered, unit)
+            end
         end 
     end
     return filtered
