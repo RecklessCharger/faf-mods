@@ -10,14 +10,25 @@ function CreateOverlay(unit)
 	overlay:SetTexture('/mods/SelectionHelper/textures/busy.dds', 0)
 	overlay.Width:Set(26)
 	overlay.Height:Set(26)
-	local id = unit:GetEntityId()
 	overlay:SetNeedsFrameUpdate(true)
+	local worldView = import('/lua/ui/game/worldview.lua')
+    local viewLeft = worldView.viewLeft
+	local pos = viewLeft:Project(unit:GetPosition())
+	LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 9)
 	overlay.OnFrame = function(self, delta)
-		local worldView = import('/lua/ui/game/worldview.lua').viewLeft
-		local pos = worldView:Project(unit:GetPosition())
-		LayoutHelpers.AtLeftTopIn(overlay, worldView, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 9)
+        if not (overlay.Width() == 26) then
+            LOG("overlay width is:", overlay.Width())
+        end
+        if unit:IsDead() then
+            local id = unit:GetEntityId()
+            overlays[id] = nil
+        	overlay:Destroy()
+        else
+            local viewLeft = worldView.viewLeft
+		    local pos = viewLeft:Project(unit:GetPosition())
+		    LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 9)
+        end
 	end
-	overlay.id = unit:GetEntityId()
 	return overlay
 end
 
