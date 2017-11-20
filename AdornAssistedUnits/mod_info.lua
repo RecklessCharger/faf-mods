@@ -1,0 +1,16 @@
+name = "AdornAssistedUnits"
+uid = "ba8cc463-eb22-40ac-9b94-3ff3f610370f"
+version = 1
+copyright = "no"
+description = "Adds a crown adornment to units being assisted by other units"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {"e821a66d-8d73-442e-9df1-08d7516e4c17"}
+requiresNames = {}
+conflicts = { }
+before = {}
+after = {}
