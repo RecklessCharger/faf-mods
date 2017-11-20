@@ -1,0 +1,16 @@
+name = "AdornmentTest"
+uid = "2e3c2940-4289-4e95-a349-1dbe04702c57"
+version = 1
+copyright = "no"
+description = "Toggleable adornment, for test purposes"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = false
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = { }
+before = {}
+after = {}
