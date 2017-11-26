@@ -6,35 +6,21 @@ local overlays = {}
 
 function CreateOverlay(unit)
 	local overlay = Bitmap(GetFrame(0))
-
-	local id = unit:GetEntityId()
-	
-	--print "creating overlay"
-
 	overlay.Width:Set(10)
 	overlay.Height:Set(10)
-	
---	AddCommandFeedbackBlip({
---		Position = unit:GetPosition(), 
---		MeshName = '/meshes/game/flag02d_lod0.scm',
---		TextureName = '/meshes/game/flag02d_albedo.dds',
---		ShaderName = 'CommandFeedback',
---		UniformScale = 0.5,
---	}, 0.7)		
-
+	local worldView = import('/lua/ui/game/worldview.lua').viewLeft
 	overlay:SetNeedsFrameUpdate(true)
 	overlay.OnFrame = function(self, delta)
-		local worldView = import('/lua/ui/game/worldview.lua').viewLeft
 		local pos = worldView:Project(unit:GetPosition())
 		LayoutHelpers.AtLeftTopIn(overlay, worldView, pos.x - overlay.Width() + 5, pos.y - overlay.Height() - 9)
 	end
-		
-	overlay.id = unit:GetEntityId()
+    overlay.id = unit:GetEntityId()
 	overlay.text = UIUtil.CreateText(overlay, '<??>', 14, UIUtil.bodyFont)
 	overlay.text:SetColor('white')
 	overlay.text:SetDropShadow(true)
 	LayoutHelpers.AtCenterIn(overlay.text, overlay, 0, 0)
-
+	local pos = worldView:Project(unit:GetPosition())
+	LayoutHelpers.AtLeftTopIn(overlay, worldView, pos.x - overlay.Width() + 5, pos.y - overlay.Height() - 9)
 	return overlay
 end
 
@@ -70,5 +56,4 @@ function BeatFunction()
             overlays[id] = CreateOverlay(entity)
         end
 	end
-
 end
