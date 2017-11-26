@@ -12,7 +12,7 @@ function CreateOverlay(unit)
 	local worldView = import('/lua/ui/game/worldview.lua')
     local viewLeft = worldView.viewLeft
 	local pos = viewLeft:Project(unit:GetPosition())
-	LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 9)
+	LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 7)
 	overlay.OnFrame = function(self, delta)
         if not (overlay.Width() == 26) then
             LOG("overlay width is:", overlay.Width())
@@ -24,7 +24,7 @@ function CreateOverlay(unit)
         else
             local viewLeft = worldView.viewLeft
 		    local pos = viewLeft:Project(unit:GetPosition())
-		    LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 9)
+		    LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 7)
         end
 	end
 	return overlay
