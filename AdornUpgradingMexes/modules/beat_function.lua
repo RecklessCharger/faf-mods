@@ -14,9 +14,6 @@ function CreateOverlay(unit)
 	local pos = viewLeft:Project(unit:GetPosition())
 	LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() - 6, pos.y - overlay.Height() / 2)
 	overlay.OnFrame = function(self, delta)
-        if not (overlay.Width() == 26) then
-            LOG("overlay width is:", overlay.Width())
-        end
         if unit:IsDead() then
             local id = unit:GetEntityId()
             overlays[id] = nil
