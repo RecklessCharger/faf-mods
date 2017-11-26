@@ -9,13 +9,10 @@ function CreateOverlay(unit)
 	overlay.Width:Set(24)
 	overlay.Height:Set(24)
 	overlay:SetNeedsFrameUpdate(true)
+    local id = unit:GetEntityId()
 	local worldView = import('/lua/ui/game/worldview.lua')
-    local viewLeft = worldView.viewLeft
-	local pos = viewLeft:Project(unit:GetPosition())
-	LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() - 6, pos.y - overlay.Height() / 2)
 	overlay.OnFrame = function(self, delta)
         if unit:IsDead() then
-            local id = unit:GetEntityId()
             overlays[id] = nil
         	overlay:Destroy()
         else
@@ -24,6 +21,9 @@ function CreateOverlay(unit)
 		    LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() - 6, pos.y - overlay.Height() / 2)
         end
 	end
+    local viewLeft = worldView.viewLeft
+	local pos = viewLeft:Project(unit:GetPosition())
+	LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() - 6, pos.y - overlay.Height() / 2)
 	return overlay
 end
 
