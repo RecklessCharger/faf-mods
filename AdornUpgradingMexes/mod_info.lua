@@ -1,0 +1,16 @@
+name = "AdornUpgradingMexes"
+uid = "4ee8f696-6c50-4882-8fa1-8a3c01cb423f"
+version = 1
+copyright = "no"
+description = "Adds an adornment to metal extractors that are being upgraded"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {"e821a66d-8d73-442e-9df1-08d7516e4c17"}
+requiresNames = {}
+conflicts = { }
+before = {}
+after = {}
