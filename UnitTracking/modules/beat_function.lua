@@ -1,12 +1,19 @@
 --local Score = import('/mods/UnitTracking/modules/score.lua')
 
 local unitsByID = {}
+local factoriesByID = {}
+local engineersByID = {}
 local numberOfUnits = 0
 
 function AddUnitIfNew(unit)
     if unitsByID[unit:GetEntityId()] then return end -- not new 
     numberOfUnits = numberOfUnits + 1
     unitsByID[unit:GetEntityId()] = unit
+    if unit:IsInCategory("FACTORY") then
+        factoriesByID[unit:GetEntityId()] = unit
+    elseif unit:IsInCategory("ENGINEER") then
+        engineersByID[unit:GetEntityId()] = unit
+    end
     LOG("unit added, numberOfUnits = "..numberOfUnits)
 end
 
@@ -43,6 +50,32 @@ function RemoveUnitBeatFunction(fn)
     end
 end
 
+function CheckFactories()
+    for id,e in pairs(factoriesByID) do
+        if e:IsDead() then
+            factoriesByID[id] = nil
+        else
+            local beingBuilt = e:GetFocus()
+            if beingBuilt then
+                AddUnitIfNew(beingBuilt)
+            end
+        end
+    end
+end
+
+function CheckEngineers()
+    for id,e in pairs(engineersByID) do
+        if e:IsDead() then
+            engineersByID[id] = nil
+        elseif HasAsFirstCommand(e, "BuildMobile") then
+            local beingBuilt = e:GetFocus()
+            if beingBuilt then
+                AddUnitIfNew(beingBuilt)
+            end
+        end
+    end
+end
+
 function BeatFunction()
     if numberOfUnits == 0 then AddSelected() return end
 
@@ -50,13 +83,16 @@ function BeatFunction()
         if e:IsDead() then
             unitsByID[id] = nil
             numberOfUnits = numberOfUnits - 1
-        else
-            local beingBuilt = GetUnitBeingBuilt_IfAny(e)
-            if beingBuilt then
-                AddUnitIfNew(beingBuilt)
-            end
+--        else
+--            local beingBuilt = GetUnitBeingBuilt_IfAny(e)
+--            if beingBuilt then
+--                AddUnitIfNew(beingBuilt)
+--            end
         end
     end
+
+    CheckEngineers()
+    CheckFactories()
 
     --local army = GetFocusArmy()
     --local score = Score.Get()
