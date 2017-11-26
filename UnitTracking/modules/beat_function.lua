@@ -14,7 +14,7 @@ function AddUnitIfNew(unit)
     elseif unit:IsInCategory("ENGINEER") then
         engineersByID[unit:GetEntityId()] = unit
     end
-    LOG("unit added, numberOfUnits = "..numberOfUnits)
+    --LOG("unit added, numberOfUnits = "..numberOfUnits)
 end
 
 function AddSelected()
