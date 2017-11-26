@@ -1,0 +1,16 @@
+name = "MexManager"
+uid = "8f1b79c8-d189-4d7f-9738-43b3f5601350"
+version = 1
+copyright = "no"
+description = "Throttle mex upgrading to one at a time, show upgrading mexes with adornment."
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {"e821a66d-8d73-442e-9df1-08d7516e4c17"}
+requiresNames = {}
+conflicts = { }
+before = {}
+after = {}
