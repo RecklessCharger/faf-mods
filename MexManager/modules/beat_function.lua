@@ -34,6 +34,16 @@ function FindInUpgradeQueue(id)
     end
 end
 
+-- example of table returned by GetEconomyTotals()
+--{
+--   income={ ENERGY=6, MASS=0.5 },
+--   lastUseActual={ ENERGY=8.3374795913696, MASS=1 },
+--   lastUseRequested={ ENERGY=8.3374795913696, MASS=1 },
+--   maxStorage={ ENERGY=4000, MASS=750 },
+--   reclaimed={ ENERGY=80, MASS=19.800001144409 },
+--   stored={ ENERGY=1112.5, MASS=124.80000305176 }
+--}
+
 function BeatFunction(unitsByID)
     for id,e in pairs(unitsByID) do
         if e:IsInCategory('MASSEXTRACTION') and e:IsInCategory('STRUCTURE') then
@@ -66,10 +76,18 @@ function BeatFunction(unitsByID)
     end
     upgradeQueue = updatedUpgradeQueue
 
+    local ecoTotals = GetEconomyTotals()
+    local numberToUnpause = 1
+    local massPercent = ecoTotals.stored.MASS / ecoTotals.maxStorage.MASS
+    local energyPercent = ecoTotals.stored.ENERGY / ecoTotals.maxStorage.ENERGY
+    if massPercent > 0.8 and energyPercent > 0.5 then numberToUnpause = 2 end
+    if massPercent < 0.4 and energyPercent < 0.3 then numberToUnpause = 0 end
+    if energyPercent < 0.1 then numberToUnpause = 0 end
+
     toPause = {}
     toUnpause = {}
     for i,entry in ipairs(upgradeQueue) do
-        if i == 1 then
+        if i <= numberToUnpause then
             table.insert(toUnpause, unitsByID[upgradeQueue[i]])
         else
             table.insert(toPause, unitsByID[upgradeQueue[i]])
