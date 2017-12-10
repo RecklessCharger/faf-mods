@@ -7,7 +7,7 @@ local overlays = {}
 
 function CreateOverlay(unit)
 	local overlay = Bitmap(GetFrame(0))
-	overlay:SetTexture('/mods/SelectionHelper/textures/busy.dds', 0)
+	overlay:SetTexture('/mods/AdornmentTest/textures/busy.dds', 0)
 	overlay.Width:Set(26)
 	overlay.Height:Set(26)
 	overlay:SetNeedsFrameUpdate(true)
@@ -15,9 +15,6 @@ function CreateOverlay(unit)
 	local pos = worldView:Project(unit:GetPosition())
 	LayoutHelpers.AtLeftTopIn(overlay, worldView, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 9)
 	overlay.OnFrame = function(self, delta)
-        if not (overlay.Width() == 26) then
-            LOG("overlay width is:", overlay.Width())
-        end
         if unit:IsDead() then
             local id = unit:GetEntityId()
             overlays[id] = nil
@@ -42,7 +39,7 @@ function ToggleFor(u)
 end
 
 function ToggleForSelection()
-    import("/lua/lazyvar.lua").ExtendedErrorMessages = true
+    --import("/lua/lazyvar.lua").ExtendedErrorMessages = true
     for _, u in GetSelectedUnits() or {} do
         ToggleFor(u)
     end
