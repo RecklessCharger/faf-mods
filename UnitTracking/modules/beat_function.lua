@@ -9,7 +9,8 @@ function AddUnitIfNew(unit)
     if unitsByID[unit:GetEntityId()] then return end -- not new 
     numberOfUnits = numberOfUnits + 1
     unitsByID[unit:GetEntityId()] = unit
-    if unit:IsInCategory("FACTORY") then
+    if unit:IsInCategory("STRUCTURE") and unit:IsInCategory("SHOWQUEUE") then
+        -- (now also includes stuff like mexes, since mex upgrade works by building the upgraded structure and then being destroyed)
         factoriesByID[unit:GetEntityId()] = unit
     elseif unit:IsInCategory("ENGINEER") then
         engineersByID[unit:GetEntityId()] = unit
@@ -91,8 +92,11 @@ function BeatFunction()
         end
     end
 
-    CheckEngineers()
-    CheckFactories()
+    if math.mod(GameTick(), 2) == 0 then
+        CheckEngineers()
+    else
+        CheckFactories()
+    end
 
     --local army = GetFocusArmy()
     --local score = Score.Get()
