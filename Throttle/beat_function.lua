@@ -31,9 +31,26 @@ function BeatFunction()
     if massPercent < 0.3 and energyPercent < 0.3 then throttle = true end
     if massPercent < 0.1 or energyPercent < 0.1 then throttle = true end
 
-    local asArray = {}
-    for id,unit in unitsByID do
-        table.insert(asArray, unit)        
+    if throttle then
+        local toPause = {}
+        for id,unit in unitsByID do
+            local inTable = {unit}
+            if not GetIsPaused(inTable) then
+                LOG("Unit needs to be paused")
+                table.insert(toPause, unit)
+            end
+        end
+        if toPause[1] then
+            SetPaused(toPause, true)
+        end
+    else
+        local toUnpause = {}
+        for id,unit in unitsByID do
+            table.insert(toUnpause, unit)
+        end
+        if GetIsPaused(toUnpause) then
+            LOG("One or more units need to be unpaused")
+            SetPaused(toUnpause, false)
+        end
     end
-    SetPaused(asArray, throttle)
 end
