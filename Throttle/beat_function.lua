@@ -36,7 +36,7 @@ function BeatFunction()
         for id,unit in unitsByID do
             local inTable = {unit}
             if not GetIsPaused(inTable) then
-                LOG("Unit needs to be paused")
+                --LOG("Unit needs to be paused")
                 table.insert(toPause, unit)
             end
         end
@@ -49,7 +49,7 @@ function BeatFunction()
             table.insert(toUnpause, unit)
         end
         if GetIsPaused(toUnpause) then
-            LOG("One or more units need to be unpaused")
+            --LOG("One or more units need to be unpaused")
             SetPaused(toUnpause, false)
         end
     end
