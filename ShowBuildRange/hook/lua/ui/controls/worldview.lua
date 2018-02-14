@@ -33,11 +33,13 @@ WorldView = Class(oldWorldView, Control) {
                 local bp = u:GetBlueprint()
                 local radius = bp.Economy.MaxBuildDistance
                 if radius then
-                    if (ring == nil) or (ringRadius ~= radius) then
-                        if ring then ring:Destroy() end
+                    if ring == nil then
                         local Decal = import('/lua/user/userdecal.lua').UserDecal
                         ring = Decal(GetFrame(0))
                         ring:SetTexture(texture)
+                        ringRadius = nil
+                    end
+                    if ringRadius ~= radius then
                         local x1 = 2
                         local x2 = 2
                         local y1 = 2
@@ -48,7 +50,7 @@ WorldView = Class(oldWorldView, Control) {
                     ring:SetPosition(GetMouseWorldPos())
                 else
                     if ring then ring:Destroy() end
-                    ring = nil        
+                    ring = nil
                 end
             else
                 if ring then ring:Destroy() end
