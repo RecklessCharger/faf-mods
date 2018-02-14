@@ -27,15 +27,34 @@ WorldView = Class(oldWorldView, Control) {
         local radius = 7
 
         if IsKeyDown("SHIFT") and (isAcceptablePreviewMode(CM.GetCommandMode())) then
-            if ring == nil then
-                local Decal = import('/lua/user/userdecal.lua').UserDecal
-                ring = Decal(GetFrame(0))
-                ring:SetTexture(texture)
-                ring:SetScale({math.floor(2.03*radius), 0, math.floor(2.03*radius)})
+            local selection = GetSelectedUnits()
+            if selection and (selection[1] ~= nil) and (selection[2] == nil) then
+                local u = selection[1]
+                local bp = u:GetBlueprint()
+                local radius = bp.Economy.MaxBuildDistance
+                if radius then
+                    if ring == nil then
+                        local Decal = import('/lua/user/userdecal.lua').UserDecal
+                        ring = Decal(GetFrame(0))
+                        ring:SetTexture(texture)
+
+                        local x1 = 2
+                        local x2 = 2
+                        local y1 = 2
+                        local y2 = 2
+                        ring:SetScale({math.floor(2.03*(radius + x1) + x2), 0, math.floor(2.03*(radius + y1)) + y2})
+                    end
+                    ring:SetPosition(GetMouseWorldPos())
+                else
+                    if ring then ring:Destroy() end
+                    ring = nil        
+                end
+            else
+                if ring then ring:Destroy() end
+                ring = nil        
             end
-            ring:SetPosition(GetMouseWorldPos())            
         else
-            ring:Destroy()
+            if ring then ring:Destroy() end
             ring = nil
         end
 
