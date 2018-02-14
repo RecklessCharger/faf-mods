@@ -32,21 +32,45 @@ function CreateOverlay(unit)
     overlayedUnitByID[id] = unit
 end
 
-function ToggleFor(u)
+function AtLeastOneFlagged(selection)
+    for _, u in selection do
+        local id = u:GetEntityId()
+        if overlays[id] ~= nil then
+            return true
+        end
+    end
+    return false
+end
+
+function ForceUnset(u)
     local id = u:GetEntityId()
-    if overlays[id] == nil then
-        CreateOverlay(u)
-    else
+    if overlays[id] ~= nil then
+        toUnpause = {u}
+        SetPaused(toUnpause, false)
     	overlays[id]:Destroy()
 		overlays[id] = nil
 		overlayedUnitByID[id] = nil
     end
 end
 
+function ForceSet(u)
+    local id = u:GetEntityId()
+    if overlays[id] == nil then
+        CreateOverlay(u)
+    end
+end
+
 function ToggleForSelection()
     --import("/lua/lazyvar.lua").ExtendedErrorMessages = true
-    for _, u in GetSelectedUnits() or {} do
-        ToggleFor(u)
+    local selectedUnits = GetSelectedUnits() or {}
+    if AtLeastOneFlagged(selectedUnits) then
+        for _, u in selectedUnits do
+            ForceUnset(u)
+        end
+    else
+        for _, u in selectedUnits do
+            ForceSet(u)
+        end
     end
 end
 
