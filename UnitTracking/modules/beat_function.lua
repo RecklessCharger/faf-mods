@@ -5,6 +5,20 @@ local factoriesByID = {}
 local engineersByID = {}
 local numberOfUnits = 0
 
+local _unitCreationHooks= {}
+
+function AddUnitCreationHook(fn)
+    table.insert(_unitCreationHooks, fn)
+end
+function RemoveUnitCreationHook(fn)
+    for i,v in _unitCreationHooks do
+        if v == fn then
+            table.remove(_unitCreationHooks, i)
+            break
+        end
+    end
+end
+
 function AddUnitIfNew(unit)
     if unitsByID[unit:GetEntityId()] then return end -- not new 
     numberOfUnits = numberOfUnits + 1
@@ -14,6 +28,9 @@ function AddUnitIfNew(unit)
         factoriesByID[unit:GetEntityId()] = unit
     elseif unit:IsInCategory("ENGINEER") then
         engineersByID[unit:GetEntityId()] = unit
+    end
+    for _,fn in _unitCreationHooks do
+        fn(unit)
     end
     --LOG("unit added, numberOfUnits = "..numberOfUnits)
 end
@@ -41,7 +58,6 @@ local _beatFunctions = {}
 function AddUnitBeatFunction(fn)
     table.insert(_beatFunctions, fn)
 end
-
 function RemoveUnitBeatFunction(fn)
     for i,v in _beatFunctions do
         if v == fn then
