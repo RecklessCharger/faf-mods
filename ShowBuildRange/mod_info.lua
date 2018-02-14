@@ -1,0 +1,16 @@
+name = "ShowBuildRange"
+version = 1
+copyright = "no"
+description = "Just the bit to show unit build range, extracted from Additional Camera Stuff v3.2."
+author = "Thomas Young"
+url = "upcoder.com"
+uid = "b121c11a-7ab4-4f02-9a33-f840fb10b725"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = {}
+before = {}
+after = {}
