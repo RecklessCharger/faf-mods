@@ -1,6 +1,7 @@
 local CM = import('/lua/ui/game/commandmode.lua')
 
 local ring = nil
+local ringRadius = nil
 
 function isAcceptablePreviewMode(mode)
     if (not mode[2]) then
@@ -24,7 +25,6 @@ WorldView = Class(oldWorldView, Control) {
 
     OnUpdateCursor = function(self)
         local texture = '/mods/RenderCircleAtCursor/textures/range_ring.dds'
-        local radius = 7
 
         if IsKeyDown("SHIFT") and (isAcceptablePreviewMode(CM.GetCommandMode())) then
             local selection = GetSelectedUnits()
@@ -33,16 +33,17 @@ WorldView = Class(oldWorldView, Control) {
                 local bp = u:GetBlueprint()
                 local radius = bp.Economy.MaxBuildDistance
                 if radius then
-                    if ring == nil then
+                    if (ring == nil) or (ringRadius ~= radius) then
+                        if ring then ring:Destroy() end
                         local Decal = import('/lua/user/userdecal.lua').UserDecal
                         ring = Decal(GetFrame(0))
                         ring:SetTexture(texture)
-
                         local x1 = 2
                         local x2 = 2
                         local y1 = 2
                         local y2 = 2
                         ring:SetScale({math.floor(2.03*(radius + x1) + x2), 0, math.floor(2.03*(radius + y1)) + y2})
+                        ringRadius = radius
                     end
                     ring:SetPosition(GetMouseWorldPos())
                 else
