@@ -3,6 +3,7 @@ local oldId = nil
 function LogInfoFor(e)
     LOG("Unit selected with ID: "..e:GetEntityId())
     LOG("GetEconData() returns:"..repr(e:GetEconData()))
+	LOG("GetFireState() returns:"..repr(GetFireState({e})))
     LOG("GetCommandQueue() returns:"..repr(e:GetCommandQueue()))
     --LOG("GetGuardedEntity() returns:"..repr(e:GetGuardedEntity())) -- looks like this causes a hard crash, when there is one!
     if e:GetGuardedEntity() then
