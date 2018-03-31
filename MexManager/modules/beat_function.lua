@@ -83,11 +83,21 @@ function BeatFunction()
 
     local ecoTotals = GetEconomyTotals()
     local numberToUnpause = 1
-    local massPercent = ecoTotals.stored.MASS / ecoTotals.maxStorage.MASS
-    local energyPercent = ecoTotals.stored.ENERGY / ecoTotals.maxStorage.ENERGY
+
+	local energyDelta = ecoTotals.income.ENERGY - ecoTotals.lastUseRequested.ENERGY;
+	local massDelta = ecoTotals.income.MASS - ecoTotals.lastUseRequested.MASS;
+
+	local predictedEnergy = ecoTotals.stored.ENERGY + energyDelta * 40;
+	local predictedMass = ecoTotals.stored.MASS + massDelta * 40;
+
+    local energyPercent = predictedEnergy / ecoTotals.maxStorage.ENERGY
+    local massPercent = predictedMass / ecoTotals.maxStorage.MASS
+
     if massPercent > 0.8 and energyPercent > 0.5 then numberToUnpause = 2 end
     if massPercent < 0.4 and energyPercent < 0.3 then numberToUnpause = 0 end
     if energyPercent < 0.1 then numberToUnpause = 0 end
+
+	-- TODO take into account extractor upgrade progress somehow, especially if extractors are close to being completed
 
     toPause = {}
     toUnpause = {}
