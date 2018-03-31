@@ -9,7 +9,19 @@ local ringRadius_Direct = nil
 local ring_Indirect = nil
 local ringRadius_Indirect = nil
 
+-- examples of table returned by CM.GetCommandMode()
+--[[
+unit selected, no specific command mode (and can then move by right clicking)
+{ false, false }
+building a metal extractor, need to click to place
+{ "build", { name="uab1103" } }
+specific move order (e.g. by clicking move in bottom left)
+{ "order", { name="RULEUCC_Move" } }
+]]
+
 function isAcceptablePreviewMode(mode)
+	return mode[1] == false or (mode[1] == "order" and mode[2].name == "RULEUCC_Move") -- need case for AgressiveMove here, also?
+--[[
     if (not mode[2]) then
         return true
     end
@@ -21,6 +33,7 @@ function isAcceptablePreviewMode(mode)
         end
     end
     return false
+]]
 end
 
 function RangeIfShouldShowBuildRing(selection)
