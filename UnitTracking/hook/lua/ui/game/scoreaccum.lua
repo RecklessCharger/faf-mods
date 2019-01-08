@@ -1,5 +1,0 @@
---local originalUpdateScoreData = UpdateScoreData
---function UpdateScoreData(newData)
---  	originalUpdateScoreData(newData)
---    import('/mods/UnitTracking/modules/score.lua').Update(newData)
---end

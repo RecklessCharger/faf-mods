@@ -1,8 +1,8 @@
-name = "UnitTracking"
-uid = "e821a66d-8d73-442e-9df1-08d7516e4c17"
+name = "EcoManagementFramework"
+uid = "d59cd1a3-961b-46c6-b915-b3b550b28513"
 version = 1
 copyright = "No"
-description = "Alternative, ID based method of tracking all knowable units. Includes units for visible but not focused armies in replays."
+description = "Set up for eco mods to work together to track effect of pausing or unpausing units on expected eco values"
 author = "Thomas Young"
 url = "upcoder.com"
 selectable = true

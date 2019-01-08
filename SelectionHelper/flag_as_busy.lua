@@ -12,6 +12,7 @@ function CreateOverlay(unit)
 	overlay.Height:Set(26)
 	overlay:SetNeedsFrameUpdate(true)
 	local worldView = import('/lua/ui/game/worldview.lua')
+    local id = unit:GetEntityId()
     local viewLeft = worldView.viewLeft
 	local pos = viewLeft:Project(unit:GetPosition())
 	LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 9)
@@ -20,7 +21,6 @@ function CreateOverlay(unit)
             LOG("overlay width is:", overlay.Width())
         end
         if unit:IsDead() then
-            local id = unit:GetEntityId()
             overlays[id] = nil
         	overlay:Destroy()
         else
@@ -29,22 +29,41 @@ function CreateOverlay(unit)
 		    LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 9)
         end
 	end
-	return overlay
+    overlays[id] = overlay
 end
 
-function ToggleFlaggedAsBusy(u)
+function AtLeastOneFlagged(selection)
+    for _, u in selection do
+        local id = u:GetEntityId()
+        if overlays[id] ~= nil then
+            return true
+        end
+    end
+    return false
+end
+function ForceUnset(u)
     local id = u:GetEntityId()
-    if overlays[id] == nil then
-        overlays[id] = CreateOverlay(u)
-    else
+    if overlays[id] ~= nil then
     	overlays[id]:Destroy()
 		overlays[id] = nil
     end
 end
-
+function ForceSet(u)
+    local id = u:GetEntityId()
+    if overlays[id] == nil then
+        CreateOverlay(u)
+    end
+end
 function ToggleFlaggedAsBusyForSelection()
-    for _, u in GetSelectedUnits() or {} do
-        ToggleFlaggedAsBusy(u)
+    local selectedUnits = GetSelectedUnits() or {}
+    if AtLeastOneFlagged(selectedUnits) then
+        for _, u in selectedUnits do
+            ForceUnset(u)
+        end
+    else
+        for _, u in selectedUnits do
+            ForceSet(u)
+        end
     end
 end
 

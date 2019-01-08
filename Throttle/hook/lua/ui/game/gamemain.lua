@@ -1,8 +1,7 @@
 local originalCreateUI = CreateUI 
-local modFolder = 'Throttle'
-local BeatFunction = import('/mods/' .. modFolder .. '/beat_function.lua').BeatFunction
 
 function CreateUI(isReplay) 
-  originalCreateUI(isReplay) 
-  AddBeatFunction(BeatFunction)
+    originalCreateUI(isReplay) 
+    LOG("Adding Throttle beat function")
+    import('/mods/EcoManagementFramework/modules/beat_function.lua').AddEcoBeatFunction(1, import('/mods/Throttle/beat_function.lua').Throttle, import('/mods/Throttle/beat_function.lua').Budget)
 end

@@ -17,7 +17,7 @@ WorldView = Class(oldWorldView, Control) {
 --            if v then v() end
 --        end
         local texture = '/mods/RenderCircleAtCursor/textures/range_ring.dds'
-        local radius = 7
+        local radius = 70
         if ring == nil then
             local Decal = import('/lua/user/userdecal.lua').UserDecal
             ring = Decal(GetFrame(0))

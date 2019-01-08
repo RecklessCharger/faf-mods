@@ -3,6 +3,15 @@ local Bitmap = import('/lua/maui/bitmap.lua').Bitmap
 
 local overlays = {}
 
+function GetAssisted(e)
+    local assisted = e:GetGuardedEntity()
+    -- check for, and don't count, factories guarded by mobile units case
+    if assisted and assisted:IsInCategory('FACTORY') and not e:IsInCategory('FACTORY') then
+        assisted = nil
+    end
+    return assisted
+end
+
 function CreateOverlay(unit)
 	local overlay = Bitmap(GetFrame(0))
 	overlay:SetTexture('/mods/AdornAssistedUnits/textures/crown.dds', 0)
@@ -19,6 +28,13 @@ function CreateOverlay(unit)
             overlays[id] = nil
         	overlay:Destroy()
         else
+            if GetAssisted(unit) then
+        	    overlay.Width:Set(19)
+	            overlay.Height:Set(19)
+            else
+	            overlay.Width:Set(26)
+	            overlay.Height:Set(26)
+            end
             local viewLeft = worldView.viewLeft
 		    local pos = viewLeft:Project(unit:GetPosition())
 		    LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() - 7)
@@ -30,15 +46,11 @@ function CreateOverlay(unit)
 	return overlay
 end
 
-function BeatFunction(unitsByID)
+function UnitsBeatFunction(units)
     local overlaysAfterUpdate = {}
 
-    for _,e in pairs(unitsByID) do
-        local assisted = e:GetGuardedEntity()
-        -- check for, and don't count, factories guarded by mobile units case
-        if assisted and assisted:IsInCategory('FACTORY') and not e:IsInCategory('FACTORY') then
-            assisted = nil
-        end
+    for _,e in ipairs(units) do
+        local assisted = GetAssisted(e)
         if assisted then
             local id = assisted:GetEntityId()
             if overlaysAfterUpdate[id] == nil then

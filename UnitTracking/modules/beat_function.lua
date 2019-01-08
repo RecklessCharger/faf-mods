@@ -1,132 +1,136 @@
---local Score = import('/mods/UnitTracking/modules/score.lua')
-
-local unitsByID = {}
-local factoriesByID = {}
-local engineersByID = {}
-local numberOfUnits = 0
 
 local _unitCreationHooks= {}
-
 function AddUnitCreationHook(fn)
     table.insert(_unitCreationHooks, fn)
 end
-function RemoveUnitCreationHook(fn)
-    for i,v in _unitCreationHooks do
-        if v == fn then
-            table.remove(_unitCreationHooks, i)
-            break
+local _unitBeatFunctions = {}
+function AddAllUnitsBeatFunction(fn)
+    table.insert(_unitBeatFunctions, fn)
+end
+
+local armies = {}
+
+local normal = {units={},ids={}}
+local insignificant = {units={},ids={}}
+local zombies = {units={},ids={}} -- both normal and insignificant units go here when they die
+
+function AddFreeId(freeId)
+    --LOG("ID is free:"..freeId)
+    for _,army in ipairs(armies) do
+        if freeId <= army.idEnd then
+            table.insert(army.freeIds, freeId)
+            return
         end
     end
+    LOG("ERROR no army found for freeId")
 end
 
-function AddUnitIfNew(unit)
-    if unitsByID[unit:GetEntityId()] then return end -- not new 
-    numberOfUnits = numberOfUnits + 1
-    unitsByID[unit:GetEntityId()] = unit
-    if unit:IsInCategory("STRUCTURE") and unit:IsInCategory("SHOWQUEUE") then
-        -- (now also includes stuff like mexes, since mex upgrade works by building the upgraded structure and then being destroyed)
-        factoriesByID[unit:GetEntityId()] = unit
-    elseif unit:IsInCategory("ENGINEER") then
-        engineersByID[unit:GetEntityId()] = unit
-    end
-    for _,fn in _unitCreationHooks do
-        fn(unit)
-    end
-    --LOG("unit added, numberOfUnits = "..numberOfUnits)
-end
-
-function AddSelected()
-    for _,e in GetSelectedUnits() or {} do
-        AddUnitIfNew(e)
-    end
-end
-
-function HasAsFirstCommand(e, commandName)
-    local t = e:GetCommandQueue()
-    if not t or not t[1] then return false end
-    return t[1].type == commandName
-end
-
-function GetUnitBeingBuilt_IfAny(e)
-    if e:IsInCategory("FACTORY") or HasAsFirstCommand(e, "BuildMobile") then
-        return e:GetFocus()
-    end
-end
-
-local _beatFunctions = {}
-
-function AddUnitBeatFunction(fn)
-    table.insert(_beatFunctions, fn)
-end
-function RemoveUnitBeatFunction(fn)
-    for i,v in _beatFunctions do
-        if v == fn then
-            table.remove(_beatFunctions, i)
-            break
-        end
-    end
-end
-
-function CheckFactories()
-    for id,e in pairs(factoriesByID) do
-        if e:IsDead() then
-            factoriesByID[id] = nil
+function RemoveDead(alive, dead)
+    local i = 1
+    local n = table.getn(alive.units)
+    while i <= n do
+        local unit = alive.units[i]
+        local id = alive.ids[i]
+        if unit:IsDead() or GetUnitById(id) ~= unit then
+            table.insert(dead.units, unit)
+            table.insert(dead.ids, id)
+            alive.units[i] = alive.units[n]
+            alive.ids[i] = alive.ids[n]
+            table.remove(alive.units)
+            table.remove(alive.ids)
+            n = n - 1
         else
-            local beingBuilt = e:GetFocus()
-            if beingBuilt then
-                AddUnitIfNew(beingBuilt)
-            end
+            i = i + 1
         end
     end
 end
-
-function CheckEngineers()
-    for id,e in pairs(engineersByID) do
-        if e:IsDead() then
-            engineersByID[id] = nil
-        elseif HasAsFirstCommand(e, "BuildMobile") then
-            local beingBuilt = e:GetFocus()
-            if beingBuilt then
-                AddUnitIfNew(beingBuilt)
-            end
+function RemoveFree(dead)
+    local i = 1
+    local n = table.getn(dead.units)
+    while i <= n do
+        local unit = dead.units[i]
+        local id = dead.ids[i]
+        if GetUnitById(id) ~= unit then
+            AddFreeId(id)
+            dead.units[i] = dead.units[n]
+            dead.ids[i] = dead.ids[n]
+            table.remove(dead.units)
+            table.remove(dead.ids)
+            n = n - 1
+        else
+            i = i + 1
         end
+    end
+end
+function RemoveForClass(t)
+    RemoveDead(t.alive, t.dead)
+    RemoveFree(t.dead)
+end
+
+function AddNewlyBuilt(newUnit)
+    if newUnit:IsInCategory("INSIGNIFICANTUNIT") then
+        table.insert(insignificant.units, newUnit)
+        table.insert(insignificant.ids, tonumber(newUnit:GetEntityId()))
+    else
+        table.insert(normal.units, newUnit)
+        table.insert(normal.ids, tonumber(newUnit:GetEntityId()))
+        for _,fn in _unitCreationHooks do
+            fn(newUnit)
+        end
+    end
+    --LOG('new unit detected:'..newUnit:GetBlueprint().Description..','..newUnit:GetEntityId())
+end
+
+function AddNewlyBuiltForArmy(army)
+    local n = table.getn(army.freeIds)
+    local i = 1
+    while i <= n do
+        local newUnit = GetUnitById(army.freeIds[i])
+        if newUnit then
+            AddNewlyBuilt(newUnit)
+            army.freeIds[i] = army.freeIds[n]
+            table.remove(army.freeIds)
+            n = n - 1
+        else
+            i = i + 1
+        end
+    end
+    while GetUnitById(army.nextId) do
+        AddNewlyBuilt(GetUnitById(army.nextId))
+        army.nextId = army.nextId + 1
     end
 end
 
 function BeatFunction()
-    if numberOfUnits == 0 then AddSelected() return end
-
-    for id,e in pairs(unitsByID) do
-        if e:IsDead() then
-            unitsByID[id] = nil
-            numberOfUnits = numberOfUnits - 1
---        else
---            local beingBuilt = GetUnitBeingBuilt_IfAny(e)
---            if beingBuilt then
---                AddUnitIfNew(beingBuilt)
---            end
-        end
+    while table.getn(armies) < GetArmiesTable().numArmies do
+        armyIdStart = table.getn(armies) * 1048576
+        table.insert(armies, {idStart=armyIdStart, idEnd=armyIdStart+1048576-1, nextId=armyIdStart, freeIds={}})
     end
 
-    if math.mod(GameTick(), 2) == 0 then
-        CheckEngineers()
-    else
-        CheckFactories()
+    RemoveDead(normal, zombies)
+    RemoveDead(insignificant, zombies)
+    RemoveFree(zombies)
+
+    armyIdStart = 0
+    for _,army in ipairs(armies) do
+        AddNewlyBuiltForArmy(army)
     end
 
-    --local army = GetFocusArmy()
-    --local score = Score.Get()
-    --local n = score[army].general.currentunits.count
-    --if n ~= numberOfUnits then
-    --    LOG("Our unit count = "..numberOfUnits)
-    --    LOG("Score unit count = "..n)
-    --end
-
-    for i,v in _beatFunctions do
-        if v then v(unitsByID) end
+    for _,fn in _unitBeatFunctions do
+        fn(normal.units)
     end
 end
 
---function GetUnitsByID()
---    return unitsByID
---end
+-- UI_Lua import("/mods/UnitTracking/modules/beat_function.lua").Report()
+function Report()
+    LOG("====== UnitTracking report =======")
+    LOG(table.getn(normal.units).." units")
+    LOG(table.getn(insignificant.units).." insignificant units")
+    LOG(table.getn(zombies.units).." zombies")
+    LOG(table.getn(armies).." armies tracked")
+    for _,army in ipairs(armies) do
+        LOG('  nextId='..army.nextId)
+        LOG('  freeIds='..repr(army.freeIds))
+    end
+    LOG("=========")
+end

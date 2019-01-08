@@ -83,6 +83,7 @@ function IsNearlyIdle(unit)
 end
 
 -- UI_Lua import("/mods/SelectionHelper/helper.lua").SelectIdleOrNearlyIdleByCategory("MOBILE LAND")
+-- UI_Lua import("/mods/SelectionHelper/helper.lua").SelectIdle_OrFailingThatNearlyIdle_ByCategory("ENGINEER")
 
 function SelectIdleOrNearlyIdleByCategory(spec)
     ConExecute("UI_SelectByCategory " .. spec)
@@ -95,6 +96,31 @@ function SelectIdleOrNearlyIdleByCategory(spec)
             end
         end 
     end
+    SelectUnits(toSelect)
+end
+
+function SelectIdle_OrFailingThatNearlyIdle_ByCategory(spec)
+    ConExecute("UI_SelectByCategory " .. spec)
+    local candidates = GetSelectedUnits() or {}
+    local toSelect = {}
+    for _, unit in candidates do
+        if unit:IsIdle() then
+            if not import('/mods/SelectionHelper/flag_as_busy.lua').UnitIsFlaggedAsBusy(unit) then
+                table.insert(toSelect, unit)
+            end
+        end 
+    end
+	if not toSelect[1] then
+		-- failed to find any idle
+		-- so now fall back on 'nearly idle', if any
+		for _, unit in candidates do
+			if IsNearlyIdle(unit) then
+				if not import('/mods/SelectionHelper/flag_as_busy.lua').UnitIsFlaggedAsBusy(unit) then
+					table.insert(toSelect, unit)
+				end
+			end 
+		end
+	end
     SelectUnits(toSelect)
 end
 
