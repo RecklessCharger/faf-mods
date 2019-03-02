@@ -12,20 +12,22 @@ function CreateOverlay(unit)
 	overlay.Width:Set(20)
 	overlay.Height:Set(20)
 	overlay:SetNeedsFrameUpdate(true)
-	local worldView = import('/lua/ui/game/worldview.lua').viewLeft
+	local worldView = import('/lua/ui/game/worldview.lua')
     local id = unit:GetEntityId()
-	local pos = worldView:Project(unit:GetPosition())
+    local viewLeft = worldView.viewLeft
+	local pos = viewLeft:Project(unit:GetPosition())
     local x_offset = 8
     local y_offset = -overlay.Height() / 2 - 2
-	LayoutHelpers.AtLeftTopIn(overlay, worldView, pos.x + x_offset, pos.y + y_offset)
+	LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x + x_offset, pos.y + y_offset)
 	overlay.OnFrame = function(self, delta)
         if unit:IsDead() then
             overlays[id] = nil
             overlayedUnitByID[id] = nil
         	overlay:Destroy()
         else
-		    local pos = worldView:Project(unit:GetPosition())
-        	LayoutHelpers.AtLeftTopIn(overlay, worldView, pos.x + x_offset, pos.y + y_offset)
+            local viewLeft = worldView.viewLeft
+		    local pos = viewLeft:Project(unit:GetPosition())
+        	LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x + x_offset, pos.y + y_offset)
         end
 	end
     overlays[id] = overlay
