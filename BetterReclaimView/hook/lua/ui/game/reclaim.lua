@@ -106,23 +106,23 @@ function CreateReclaimLabel(view)
 			if r.mass > 20 then
 				mass = tostring(math.floor(0.5 + r.mass))
 			end
-	    if (r.mass > 200) then
- 			if (r.mass > 800) then
-				self.text:SetFont(UIUtil.bodyFont, 20) --r.mass > 800
-				self.text:SetColor('orange')
-				self.text.Depth:Set(1000)
-			else
-				self.text:SetFont(UIUtil.bodyFont, 15) --r.mass > 200
-				self.text:SetColor('yellow')
-				self.text.Depth:Set(970)
-			end
-	    else
-			self.text:SetFont(UIUtil.bodyFont, 10)   --r.mass <= 200
-			self.text:SetColor('ffc7ff8f')
-			self.text.Depth:Set(940)
-	    end
-        self.text:SetText(mass)
-        self.oldMass = r.mass
+    	    if (r.mass > 200) then
+ 			    if (r.mass > 800) then
+				    self.text:SetFont(UIUtil.bodyFont, 20) --r.mass > 800
+				    self.text:SetColor('orange')
+				    self.text.Depth:Set(1000)
+			    else
+				    self.text:SetFont(UIUtil.bodyFont, 15) --r.mass > 200
+				    self.text:SetColor('yellow')
+				    self.text.Depth:Set(970)
+			    end
+	        else
+			    self.text:SetFont(UIUtil.bodyFont, 10)   --r.mass <= 200
+			    self.text:SetColor('ffc7ff8f')
+			    self.text.Depth:Set(940)
+	        end
+            self.text:SetText(mass)
+            self.oldMass = r.mass
         end
     end
 
@@ -158,9 +158,9 @@ function UpdateLabels()
         reclaimFrame = nil
         reclaimLine:Destroy()
         reclaimLine = nil
-        CreateRecalimTotalUI(onScreenMassTotal)
+        CreateReclaimTotalUI(onScreenMassTotal)
     else
-        CreateRecalimTotalUI(onScreenMassTotal)
+        CreateReclaimTotalUI(onScreenMassTotal)
         ReclaimTotal = true
     end
     
@@ -274,7 +274,7 @@ function OnCommandGraphShow(bool)
     end
 end
 
-function CreateRecalimTotalUI(MassTotal)
+function CreateReclaimTotalUI(MassTotal)
         reclaimFrame = Bitmap(GetFrame(0))
         reclaimFrame:SetTexture('/textures/ui/common/game/economic-overlay/econ_bmp_m.dds')
         reclaimFrame.Depth:Set(99)
