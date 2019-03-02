@@ -301,10 +301,13 @@ function Budget(available, overflow, changed, toPause, toUnpause)
         LOG('--')
     end
 
-    if (overflow.ENERGY + changed.ENERGY) > 0 or (changed.MASS + changed.MASS) > 0 then
+    local ecoTotals = GetEconomyTotals()
+    local hasMassReserve = ecoTotals.stored.MASS > (ecoTotals.maxStorage.MASS * 0.2)
+    local hasEnergyReserve = ecoTotals.stored.ENERGY > (ecoTotals.maxStorage.ENERGY * 0.5)
+    if ((overflow.ENERGY + changed.ENERGY) > 0 and hasMassReserve) or ((overflow.MASS + changed.MASS) > 0 and hasEnergyReserve) then
         if reportToLog then LOG("attempting to use overflow resources") end
         AttemptToSpend(available, overflow, changed, t1, toUnpause)
-        if (overflow.ENERGY + changed.ENERGY) > 0 or (changed.MASS + changed.MASS) > 0 then
+        if ((overflow.ENERGY + changed.ENERGY) > 0 and hasMassReserve) or ((overflow.MASS + changed.MASS) > 0 and hasEnergyReserve) then
             AttemptToSpend(available, overflow, changed, t2, toUnpause)
         end
     else
@@ -318,13 +321,6 @@ function Budget(available, overflow, changed, toPause, toUnpause)
         local massBudgetPercent = 0.15
         local energyBudgetPercent = 0.20
 
-        -- (previous code for adjusting this budget)
-        --if massPercent < 0.1 then massBudgetPercent = 0.15 end
-        --if energyPercent < 0.2 then energyBudgetPercent = 0.15 end
-        --if energyPercent < 0.1 then energyBudgetPercent = 0.05 end
-        --if energyPercent < 0.0 then energyBudgetPercent = 0 end
-
-        local ecoTotals = GetEconomyTotals()
         local energyBudget = ecoTotals.income.ENERGY * 10 * energyBudgetPercent
         local massBudget = ecoTotals.income.MASS * 10 * massBudgetPercent
 
