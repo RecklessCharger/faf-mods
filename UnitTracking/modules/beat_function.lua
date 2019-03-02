@@ -1,3 +1,5 @@
+-- ui_lua import('/mods/UnitTracking/modules/beat_function.lua').disabled=true
+disabled = false
 
 local _unitCreationHooks= {}
 function AddUnitCreationHook(fn)
@@ -82,26 +84,35 @@ function AddNewlyBuilt(newUnit)
 end
 
 function AddNewlyBuiltForArmy(army)
-    local n = table.getn(army.freeIds)
-    local i = 1
-    while i <= n do
-        local newUnit = GetUnitById(army.freeIds[i])
-        if newUnit then
-            AddNewlyBuilt(newUnit)
-            army.freeIds[i] = army.freeIds[n]
-            table.remove(army.freeIds)
-            n = n - 1
-        else
-            i = i + 1
+    if not disabled then
+        local n = table.getn(army.freeIds)
+        local i = 1
+        while i <= n do
+            local newUnit = GetUnitById(army.freeIds[i])
+            if newUnit then
+                AddNewlyBuilt(newUnit)
+                army.freeIds[i] = army.freeIds[n]
+                table.remove(army.freeIds)
+                n = n - 1
+            else
+                i = i + 1
+            end
         end
     end
     while GetUnitById(army.nextId) do
-        AddNewlyBuilt(GetUnitById(army.nextId))
+        if disabled then
+            -- doing this means that the unit can be detected as a new unit when unit tracking is enabled once again
+            AddFreeId(army.nextId)
+        else
+            AddNewlyBuilt(GetUnitById(army.nextId))
+        end
         army.nextId = army.nextId + 1
     end
 end
 
 function BeatFunction()
+    if disabled then return end
+
     while table.getn(armies) < GetArmiesTable().numArmies do
         armyIdStart = table.getn(armies) * 1048576
         table.insert(armies, {idStart=armyIdStart, idEnd=armyIdStart+1048576-1, nextId=armyIdStart, freeIds={}})
