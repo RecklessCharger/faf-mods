@@ -1,3 +1,5 @@
+-- ui_lua import('/mods/EcoManagementFramework/modules/beat_function.lua').disabled=true
+disabled = false
 
 local _beatFunctions = {}
 local _updateFunctions = {}
@@ -19,7 +21,8 @@ end
 local wasPaused = false
 
 function BeatFunction()
-    if SessionIsGameOver() then return end
+    if GetFocusArmy() == -1 then return end
+    if disabled then return end
 
     local reportToLog = SessionIsPaused() and not wasPaused
     wasPaused = SessionIsPaused()
