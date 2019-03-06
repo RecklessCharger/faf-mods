@@ -134,8 +134,9 @@ function FilterOrSelect_Idle_OrFailingThatNearlyIdle(selectionPrefix, include, e
         ConExecute("UI_SelectByCategory " .. selectionPrefix .. include)
         candidates = GetSelectedUnits() or {}
         candidates = FilterOut(candidates, exclude)
+        candidates = FilterDownToIdle_OrFailingThatNearlyIdle(candidates)
     end
-    SelectUnits(FilterDownToIdle_OrFailingThatNearlyIdle(candidates))
+    SelectUnits(candidates)
 end
 
 function FilterOrSelect_IdleOrNearlyIdle(selectionPrefix, include, exclude)
@@ -147,8 +148,9 @@ function FilterOrSelect_IdleOrNearlyIdle(selectionPrefix, include, exclude)
         ConExecute("UI_SelectByCategory " .. selectionPrefix .. include)
         candidates = GetSelectedUnits() or {}
         candidates = FilterOut(candidates, exclude)
+        candidates = FilterDownToIdleOrNearlyIdle(candidates)
     end
-    SelectUnits(FilterDownToIdleOrNearlyIdle(candidates))
+    SelectUnits(candidates)
 end
 
 function FilterOrSelect(selectionPrefix, include, exclude)
