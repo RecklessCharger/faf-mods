@@ -1,0 +1,16 @@
+name = "TargetPriorities"
+uid = "37a6892b-f205-4399-b6a1-88b171c3faf2"
+version = 1
+copyright = "no"
+description = "Assign hard coded default target priorities to certain units."
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {"e821a66d-8d73-442e-9df1-08d7516e4c17"}
+requiresNames = {}
+conflicts = { }
+before = {}
+after = {}
