@@ -1,0 +1,16 @@
+name = "Benchmark"
+uid = "bc57a813-c374-4977-a588-229492fa5933"
+version = 1
+copyright = "no"
+description = "Periodically output sim time/real time ratio to log."
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {}
+requiresNames = {}
+conflicts = {}
+before = {}
+after = {}
