@@ -65,7 +65,7 @@ end
 function FilterDownToIdle_OrFailingThatNearlyIdle(candidates)
     local filtered = {}
     for _, unit in candidates do
-        if unit:IsIdle() or IsNearlyIdle(unit) then
+        if unit:IsIdle() then
             if not import('/mods/SelectionHelper/flag_as_busy.lua').UnitIsFlaggedAsBusy(unit) then
                 table.insert(filtered, unit)
             end
@@ -77,7 +77,7 @@ function FilterDownToIdle_OrFailingThatNearlyIdle(candidates)
 		for _, unit in candidates do
 			if IsNearlyIdle(unit) then
 				if not import('/mods/SelectionHelper/flag_as_busy.lua').UnitIsFlaggedAsBusy(unit) then
-					table.insert(toSelect, unit)
+					table.insert(filtered, unit)
 				end
 			end 
 		end
@@ -100,6 +100,7 @@ end
 -- call as follows:
 -- UI_Lua import("/mods/SelectionHelper/helper.lua").SelectIdleOrNearlyIdle('+inview ', 'MOBILE LAND', 'ENGINEER')
 -- UI_Lua import("/mods/SelectionHelper/helper.lua").FilterOrSelect('+inview ', 'MOBILE LAND', 'ENGINEER')
+-- UI_Lua import("/mods/SelectionHelper/helper.lua").FilterOrSelect_Idle_OrFailingThatNearlyIdle('+inview ', 'ENGINEER', '')
 
 -- note: in addition to ConExecute("UI_SelectByCategory "..whatever)
 -- could also directly call UISelectionByCategory(expression, addToCurSel, inViewFrustum, nearestToMouse, mustBeIdle)
