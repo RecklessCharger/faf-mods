@@ -15,3 +15,12 @@ function UnitCreationHook(unit)
             })
     end
 end
+
+-- TODO set something like this up for use in hotkeys
+--function SetPrioritiesHelper()
+--    targets = "{categories.ANTIAIR - categories.AIR, categories.ENGINEER * categories.RECLAIMABLE, categories.RADAR * categories.STRUCTURE}"
+--    SimCallback({
+--            Func = 'WeaponPriorities',
+--            Args = {SelectedUnits = {unit:GetEntityId()}, prioritiesTable = targets, name = "Gunship_Default", exclusive = false }
+--        })
+--end
