@@ -36,6 +36,10 @@ function IsNearlyIdle(unit)
     if command.type ~= "Move" and command.type ~= "AggressiveMove" and command.type ~= "FormMove" then
         return false
     end
+    if unit:IsInCategory('ENGINEER') and command.type ~= "AggressiveMove" then
+        -- just moving is not enough for an engineer to be considered busy, regardless of distance
+        return true
+    end
     local toEndSquared = SquaredDist(unit:GetPosition(), command.position)
     return toEndSquared < maxDistSquared
 end
