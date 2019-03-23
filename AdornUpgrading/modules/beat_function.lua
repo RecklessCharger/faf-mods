@@ -1,8 +1,8 @@
 local LayoutHelpers = import('/lua/maui/layouthelpers.lua')
 local Bitmap = import('/lua/maui/bitmap.lua').Bitmap
 
-local overlays = {}
-local units = {}
+overlays = {}
+units = {}
 
 function CreationHook(unit)
     if unit:IsInCategory("STRUCTURE") and unit:IsInCategory("SHOWQUEUE") then
