@@ -18,14 +18,13 @@ function CreateOverlay(unit)
 	overlay.Width:Set(26)
 	overlay.Height:Set(26)
 	overlay:SetNeedsFrameUpdate(true)
-    local id = unit:GetEntityId()
 	local worldView = import('/lua/ui/game/worldview.lua')
 	overlay.OnFrame = function(self, delta)
         --if not (overlay.Width() == 26) then
         --    LOG("overlay width is:", overlay.Width())
         --end
         if unit:IsDead() then
-            overlays[id] = nil
+            overlays[unit] = nil
         	overlay:Destroy()
         else
             if GetAssisted(unit) then
@@ -52,21 +51,20 @@ function UnitsBeatFunction(units)
     for _,e in ipairs(units) do
         local assisted = GetAssisted(e)
         if assisted then
-            local id = assisted:GetEntityId()
-            if overlaysAfterUpdate[id] == nil then
+            if overlaysAfterUpdate[assisted] == nil then
                 -- first time we see this target, this frame
-                if overlays[id] then
-                    overlaysAfterUpdate[id] = overlays[id]
+                if overlays[assisted] then
+                    overlaysAfterUpdate[assisted] = overlays[assisted]
                 else
-                    overlaysAfterUpdate[id] = CreateOverlay(assisted)
+                    overlaysAfterUpdate[assisted] = CreateOverlay(assisted)
                 end
             end
         end
     end
 
-    for id,e in pairs(overlays) do
-        if overlaysAfterUpdate[id] == nil then
-            overlays[id]:Destroy()
+    for unit,overlay in pairs(overlays) do
+        if overlaysAfterUpdate[unit] == nil then
+            overlays[unit]:Destroy()
 		end
     end
 
