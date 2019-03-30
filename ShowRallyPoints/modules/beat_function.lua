@@ -28,12 +28,25 @@ function GetRallyPoint(unit)
     end
     return command.position
 end
+function GetRallyPointTexture(unit)
+    local t = unit:GetCommandQueue()
+    if not t or not t[1] then return '/textures/ui/common/game/waypoints/stop_btn_up.dds' end
+    local command = t[table.getn(t)]
+    if command.type == "Move" then
+        return '/textures/ui/common/game/waypoints/move_btn_up.dds'
+    end
+    if command.type == "AggressiveMove" then
+        return '/textures/ui/common/game/waypoints/attack_move_btn_up.dds'
+    end
+    return '/textures/ui/common/game/waypoints/stop_btn_up.dds'
+end
 
 function CreateOverlay(unit)
 	local overlay = Bitmap(GetFrame(0))
-	overlay:SetTexture('/mods/ShowRallyPoints/textures/rallypoint.dds', 0)
-	overlay.Width:Set(24)
-	overlay.Height:Set(24)
+	--overlay:SetTexture('/textures/ui/common/game/waypoints/attack_move_btn_up.dds', 0)
+	overlay:SetTexture('/textures/ui/common/game/waypoints/move_btn_up.dds', 0)
+	overlay.Width:Set(30)
+	overlay.Height:Set(30)
 	overlay:SetNeedsFrameUpdate(true)
     local id = unit:GetEntityId()
 	local worldView = import('/lua/ui/game/worldview.lua')
@@ -45,6 +58,7 @@ function CreateOverlay(unit)
             local viewLeft = worldView.viewLeft
 		    local pos = viewLeft:Project(GetRallyPoint(unit))
 		    LayoutHelpers.AtLeftTopIn(overlay, viewLeft, pos.x - overlay.Width() / 2, pos.y - overlay.Height() / 2)
+        	overlay:SetTexture(GetRallyPointTexture(unit), 0)
         end
 	end
     local viewLeft = worldView.viewLeft
