@@ -197,12 +197,14 @@ function SelectFactoryWithNearestRallyPoint()
     local bestDist
     local mousePos = GetMouseWorldPos()
     for _, unit in candidates do
-        local rallyPoint = GetRallyPoint(unit)
-        if rallyPoint then
-            local dist = SquaredDist(mousePos, rallyPoint)
-            if not best or dist < bestDist then
-                best = unit
-                bestDist = dist
+        if unit:IsRepeatQueue() then
+            local rallyPoint = GetRallyPoint(unit)
+            if rallyPoint then
+                local dist = SquaredDist(mousePos, rallyPoint)
+                if not best or dist < bestDist then
+                    best = unit
+                    bestDist = dist
+                end
             end
         end
     end
