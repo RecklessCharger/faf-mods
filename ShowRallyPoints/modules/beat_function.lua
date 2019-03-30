@@ -6,7 +6,7 @@ units = {}
 
 function CreationHook(unit)
     if unit:IsInCategory("FACTORY") then
-        units[unit:GetEntityId()] = unit
+        units[unit] = unit
     end
 end
 
@@ -48,11 +48,10 @@ function CreateOverlay(unit)
 	overlay.Width:Set(30)
 	overlay.Height:Set(30)
 	overlay:SetNeedsFrameUpdate(true)
-    local id = unit:GetEntityId()
 	local worldView = import('/lua/ui/game/worldview.lua')
 	overlay.OnFrame = function(self, delta)
         if unit:IsDead() then
-            overlays[id] = nil
+            overlays[unit] = nil
         	overlay:Destroy()
         else
             local viewLeft = worldView.viewLeft
@@ -69,20 +68,20 @@ end
 
 function BeatFunction()
     -- remove dead units
-    for id,e in units do
-        if e:IsDead() then units[id] = nil end
+    for _,e in units do
+        if e:IsDead() then units[e] = nil end
     end
 
-    for id,e in pairs(units) do
+    for _,e in pairs(units) do
 		local focus = e:GetFocus()
         if e:IsRepeatQueue() and HasRallyPoint(e) then
-            if overlays[id] == nil then
-                overlays[id] = CreateOverlay(e)
+            if overlays[e] == nil then
+                overlays[e] = CreateOverlay(e)
             end
         else
-            if overlays[id] then
-                overlays[id]:Destroy()
-                overlays[id] = nil
+            if overlays[e] then
+                overlays[e]:Destroy()
+                overlays[e] = nil
             end
         end
     end
