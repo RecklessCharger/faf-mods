@@ -1,0 +1,16 @@
+name = "ShowRallyPoints"
+uid = "c37764ea-ad2e-446d-b377-8673f12bc9b3"
+version = 1
+copyright = "no"
+description = "Adds an adornment to show the rally points for factories with repeat queues"
+author = "Thomas Young"
+url = "upcoder.com"
+selectable = true
+enabled = true
+exclusive = false
+ui_only = true
+requires = {"e821a66d-8d73-442e-9df1-08d7516e4c17"}
+requiresNames = {}
+conflicts = { }
+before = {}
+after = {}
